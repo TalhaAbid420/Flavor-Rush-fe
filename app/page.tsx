@@ -208,146 +208,77 @@ export default function Home() {
 
   return (
     <SidebarProvider>
-      <header
-        className="fixed top-0 left-0 right-0 z-[60] w-full flex flex-col items-start gap-4 bg-yellow-400 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between md:px-8"
-      >
-        <div className="flex items-center gap-3">
-          <SidebarTrigger className="text-zinc-900 hover:bg-yellow-500 hover:text-zinc-900" />
-          <Image
-            src={flavorRushLogo}
-            alt="Flavor Rush logo"
-            width={60}
-            height={60}
-            priority
-          />
-          <h1 className="text-xl font-bold tracking-wide sm:text-2xl">
-            Flavor Rush
-          </h1>
-        </div>
-        <div className="flex w-full items-center justify-end gap-4 md:w-auto">
-          <nav aria-label="Main navigation">
-            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold sm:text-base">
-              <li>
-                <a href="#pizzas" className="flex items-center gap-1 cursor-pointer transition hover:text-white">
-                  <Image src={pizzaIcon} alt="" width={20} height={20} />
-                  Pizzas
-                </a>
-              </li>
-              <li>
-                <a href="#burgers" className="flex items-center gap-1 cursor-pointer transition hover:text-white">
-                  <Image src={burgerIcon} alt="" width={20} height={20} />
-                  Burgers
-                </a>
-              </li>
-              <li>
-                <a href="#pasta" className="flex items-center gap-1 cursor-pointer transition hover:text-white">
-                  <Image src={pastaIcon} alt="" width={20} height={20} />
-                  Pasta
-                </a>
-              </li>
-              <li>
-                <a href="#drinks" className="flex items-center gap-1 cursor-pointer transition hover:text-white">
-                  <Image src={drinksIcon} alt="" width={20} height={20} />
-                  Drinks
-                </a>
-              </li>
-              <li className="flex items-center">
-                <Link
-                  href="/cart"
-                  aria-label="Cart"
-                  className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-300/40 transition hover:bg-yellow-300"
-                >
-                  <span className="sr-only">Cart</span>
-                  <span className="pointer-events-none absolute -top-4 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-md bg-zinc-900 px-2 py-1 text-xs font-medium text-white opacity-0 transition group-hover:opacity-100">
-                    See the Cart
-                  </span>
-                  <svg
-                    width="22"
-                    height="22"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    className="text-zinc-900"
-                  >
-                    <path
-                      d="M6.5 9.5H20L18.7 18.2C18.6 18.8 18.1 19.2 17.5 19.2H9.2C8.6 19.2 8.1 18.8 8 18.2L6.5 9.5Z"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6.5 9.5L5.8 6.8C5.7 6.3 5.3 6 4.8 6H3"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M9.5 22C10.3 22 11 21.3 11 20.5C11 19.7 10.3 19 9.5 19C8.7 19 8 19.7 8 20.5C8 21.3 8.7 22 9.5 22Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M17.5 22C18.3 22 19 21.3 19 20.5C19 19.7 18.3 19 17.5 19C16.7 19 16 19.7 16 20.5C16 21.3 16.7 22 17.5 22Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-
-                  <span className="absolute -right-1 -top-1 z-10 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">
-                    3
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </nav>
-
-
-
-          <button
-            type="button"
-            onClick={() => setIsPlaceOrderModalOpen(true)}
-            className="hidden whitespace-nowrap rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500 sm:block"
-          >
-            Place Order
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsRegisterModalOpen(true)}
-            className="hidden whitespace-nowrap rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-50 sm:block"
-          >
-            Register
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsProfileModalOpen(true)}
-            className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden cursor-pointer rounded-full bg-zinc-800 ring-1 ring-white/20"
-            aria-label="User profile"
-          >
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              className="text-zinc-200"
-            >
-              <path
-                d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z"
-                fill="currentColor"
-              />
-              <path
-                d="M4 20C4.6 16.4 7.7 14 12 14C16.3 14 19.4 16.4 20 20"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
+      <header className="fixed top-0 left-0 right-0 z-[60] w-full bg-yellow-400 px-4 py-3 sm:px-6 md:px-8">
+        {/* ── Mobile row 1: Trigger + Logo + Profile ── */}
+        <div className="flex items-center justify-between gap-2 md:hidden">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger className="text-zinc-900 hover:bg-yellow-500 hover:text-zinc-900" />
+            <Image src={flavorRushLogo} alt="Flavor Rush logo" width={44} height={44} priority />
+            <h1 className="text-lg font-bold tracking-wide">Flavor Rush</h1>
+          </div>
+          <button type="button" onClick={() => setIsProfileModalOpen(true)} className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden cursor-pointer rounded-full bg-zinc-800 ring-1 ring-white/20" aria-label="User profile">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="text-zinc-200">
+              <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" fill="currentColor" />
+              <path d="M4 20C4.6 16.4 7.7 14 12 14C16.3 14 19.4 16.4 20 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
         </div>
+        {/* ── Mobile row 2: Place Order + Register + Cart ── */}
+        <div className="mt-2 flex items-center gap-2 md:hidden">
+          <button type="button" onClick={() => setIsPlaceOrderModalOpen(true)} className="flex-1 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-500">Place Order</button>
+          <button type="button" onClick={() => setIsRegisterModalOpen(true)} className="flex-1 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-50">Register</button>
+          <Link href="/cart" aria-label="Cart" className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-yellow-300/40 transition hover:bg-yellow-300">
+            <span className="sr-only">Cart</span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="text-zinc-900">
+              <path d="M6.5 9.5H20L18.7 18.2C18.6 18.8 18.1 19.2 17.5 19.2H9.2C8.6 19.2 8.1 18.8 8 18.2L6.5 9.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+              <path d="M6.5 9.5L5.8 6.8C5.7 6.3 5.3 6 4.8 6H3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M9.5 22C10.3 22 11 21.3 11 20.5C11 19.7 10.3 19 9.5 19C8.7 19 8 19.7 8 20.5C8 21.3 8.7 22 9.5 22Z" fill="currentColor" />
+              <path d="M17.5 22C18.3 22 19 21.3 19 20.5C19 19.7 18.3 19 17.5 19C16.7 19 16 19.7 16 20.5C16 21.3 16.7 22 17.5 22Z" fill="currentColor" />
+            </svg>
+            <span className="absolute -right-1 -top-1 z-10 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">3</span>
+          </Link>
+        </div>
+        {/* ── Desktop single row ── */}
+        <div className="hidden md:flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger className="text-zinc-900 hover:bg-yellow-500 hover:text-zinc-900" />
+            <Image src={flavorRushLogo} alt="Flavor Rush logo" width={60} height={60} priority />
+            <h1 className="text-2xl font-bold tracking-wide">Flavor Rush</h1>
+          </div>
+          <div className="flex items-center gap-4">
+            <nav aria-label="Main navigation">
+              <ul className="flex items-center gap-x-6 text-sm font-semibold">
+                <li><a href="#pizzas" className="flex items-center gap-1 cursor-pointer transition hover:text-white"><Image src={pizzaIcon} alt="" width={20} height={20} />Pizzas</a></li>
+                <li><a href="#burgers" className="flex items-center gap-1 cursor-pointer transition hover:text-white"><Image src={burgerIcon} alt="" width={20} height={20} />Burgers</a></li>
+                <li><a href="#pasta" className="flex items-center gap-1 cursor-pointer transition hover:text-white"><Image src={pastaIcon} alt="" width={20} height={20} />Pasta</a></li>
+                <li><a href="#drinks" className="flex items-center gap-1 cursor-pointer transition hover:text-white"><Image src={drinksIcon} alt="" width={20} height={20} />Drinks</a></li>
+                <li className="flex items-center">
+                  <Link href="/cart" aria-label="Cart" className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-300/40 transition hover:bg-yellow-300">
+                    <span className="sr-only">Cart</span>
+                    <span className="pointer-events-none absolute -top-4 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-md bg-zinc-900 px-2 py-1 text-xs font-medium text-white opacity-0 transition group-hover:opacity-100">See the Cart</span>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="text-zinc-900">
+                      <path d="M6.5 9.5H20L18.7 18.2C18.6 18.8 18.1 19.2 17.5 19.2H9.2C8.6 19.2 8.1 18.8 8 18.2L6.5 9.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                      <path d="M6.5 9.5L5.8 6.8C5.7 6.3 5.3 6 4.8 6H3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      <path d="M9.5 22C10.3 22 11 21.3 11 20.5C11 19.7 10.3 19 9.5 19C8.7 19 8 19.7 8 20.5C8 21.3 8.7 22 9.5 22Z" fill="currentColor" />
+                      <path d="M17.5 22C18.3 22 19 21.3 19 20.5C19 19.7 18.3 19 17.5 19C16.7 19 16 19.7 16 20.5C16 21.3 16.7 22 17.5 22Z" fill="currentColor" />
+                    </svg>
+                    <span className="absolute -right-1 -top-1 z-10 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">3</span>
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+            <button type="button" onClick={() => setIsPlaceOrderModalOpen(true)} className="whitespace-nowrap rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">Place Order</button>
+            <button type="button" onClick={() => setIsRegisterModalOpen(true)} className="whitespace-nowrap rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-50">Register</button>
+            <button type="button" onClick={() => setIsProfileModalOpen(true)} className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden cursor-pointer rounded-full bg-zinc-800 ring-1 ring-white/20" aria-label="User profile">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="text-zinc-200">
+                <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" fill="currentColor" />
+                <path d="M4 20C4.6 16.4 7.7 14 12 14C16.3 14 19.4 16.4 20 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </header>
-      <Sidebar variant="sidebar" side="left" className="bg-zinc-900 border-none pt-[92px]">
+      <Sidebar variant="sidebar" side="left" className="bg-zinc-900 border-none pt-[116px] md:pt-[84px]">
         <SidebarContent>
           <SidebarGroup>
             <SidebarMenu className="gap-3 px-4 pt-4 sm:pt-6">
@@ -409,7 +340,7 @@ export default function Home() {
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      <SidebarInset className="min-w-0 w-full pt-24 md:pt-[92px]">
+      <SidebarInset className="min-w-0 w-full pt-[116px] md:pt-[84px]">
 
 
 
@@ -1149,10 +1080,19 @@ export default function Home() {
         </div>
       ) : null}
 
+      {/* Chat Window backdrop — closes on outside click */}
+      {isChatOpen && (
+        <div className="fixed inset-0 z-40" onClick={() => setIsChatOpen(false)} />
+      )}
+
       {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-24 right-6 z-50 flex h-96 w-80 flex-col overflow-hidden rounded-xl bg-white shadow-2xl border border-zinc-200">
-          <div className="flex items-center justify-between bg-yellow-400 px-4 py-3">
+        <div
+          className="fixed bottom-24 right-4 z-50 flex flex-col overflow-hidden rounded-xl bg-white shadow-2xl border border-zinc-200"
+          style={{ width: 'min(320px, calc(100vw - 2rem))', height: 'min(384px, calc(100vh - 160px))' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between bg-yellow-400 px-4 py-3 shrink-0">
             <h3 className="font-bold text-zinc-900">Helper Assistant</h3>
             <button onClick={() => setIsChatOpen(false)} className="text-zinc-700 hover:text-zinc-900 transition">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1169,7 +1109,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <form onSubmit={handleSendChatMessage} className="flex border-t border-zinc-200 bg-white p-2">
+          <form onSubmit={handleSendChatMessage} className="flex border-t border-zinc-200 bg-white p-2 shrink-0">
             <input
               type="text"
               value={chatInput}
