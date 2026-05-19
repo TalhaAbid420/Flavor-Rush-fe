@@ -352,7 +352,7 @@ export default function Home() {
           <SidebarGroup>
             <SidebarMenu className="gap-3 px-4 pt-4 sm:pt-6">
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-3 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
                   <a href="#pizzas" className="flex items-center w-full">
                     <Image src={pizzaIcon} alt="" width={24} height={24} className="mr-2 shrink-0" />
                     Pizzas
@@ -360,7 +360,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-3 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
                   <a href="#burgers" className="flex items-center w-full">
                     <Image src={burgerIcon} alt="" width={24} height={24} className="mr-2 shrink-0" />
                     Burgers
@@ -368,7 +368,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-3 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
                   <a href="#pasta" className="flex items-center w-full">
                     <Image src={pastaIcon} alt="" width={24} height={24} className="mr-2 shrink-0" />
                     Pasta
@@ -376,7 +376,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-3 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
                   <a href="#drinks" className="flex items-center w-full">
                     <Image src={drinksIcon} alt="" width={24} height={24} className="mr-2 shrink-0" />
                     Drinks
@@ -384,7 +384,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem className="mt-auto pt-4">
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-red-600 px-4 py-3 text-base font-semibold text-white transition hover:bg-red-500 hover:text-white">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-red-600 px-4 py-6 text-base font-semibold text-white transition hover:bg-red-500 hover:text-white">
                   <Link href="/cart" className="flex items-center w-full">
                     <ShoppingCart className="w-6 h-6 mr-2 shrink-0" />
                     Cart
@@ -392,7 +392,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-zinc-800 px-4 py-3 text-base font-semibold text-white transition hover:bg-zinc-700 hover:text-white">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-zinc-800 px-4 py-6 text-base font-semibold text-white transition hover:bg-zinc-700 hover:text-white">
                   <Link href="/tracking" className="flex items-center w-full">
                     <MapPin className="w-6 h-6 text-yellow-400 mr-2 shrink-0" />
                     Track your order
@@ -400,7 +400,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => setIsFutureBookingModalOpen(true)} className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-3 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton onClick={() => setIsFutureBookingModalOpen(true)} className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
                   <CalendarDays className="w-6 h-6 mr-2 shrink-0" />
                   Future Booking
                 </SidebarMenuButton>
@@ -526,7 +526,8 @@ export default function Home() {
                     key={item.name}
                     name={item.name}
                     desc={item.desc}
-                    image="/mock-pizza.jpg"
+                    image="/burger.jpg"
+                    imageFit="contain"
                     actionButton={
                       <button
                         onClick={() => handleAddToCart(item.name)}
@@ -550,7 +551,7 @@ export default function Home() {
               Choose from creamy, spicy, and tomato-based pasta dishes made to
               order.
             </p>
-            <div className="mt-6 flex flex-wrap gap-4">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[
                 { name: "Alfredo Pasta", desc: "Creamy white sauce pasta with parmesan." },
                 { name: "Arrabbiata Pasta", desc: "Spicy tomato sauce with garlic and herbs." },
@@ -558,21 +559,24 @@ export default function Home() {
                 { name: "Chicken Penne", desc: "Penne tossed with grilled chicken in pink sauce." },
               ].map((item, index) => (
                 isFetchingData ? (
-                  <SkeletonCard key={index} className="min-w-[180px] flex-1 sm:min-w-[220px]" />
+                  <SkeletonCard key={index} />
                 ) : (
-                  <article key={item.name} className="min-w-[180px] flex-1 flex flex-col justify-between rounded-lg border border-zinc-200 p-4 sm:min-w-[220px]">
-                    <div>
-                      <h3 className="font-semibold">{item.name}</h3>
-                      <p className="mt-1 text-sm text-zinc-600">{item.desc}</p>
-                    </div>
-                    <button
-                      onClick={() => handleAddToCart(item.name)}
-                      disabled={!!loadingItem}
-                      className="mt-4 flex w-full items-center justify-center rounded-lg bg-yellow-400 px-4 py-2 font-semibold text-zinc-900 transition hover:bg-yellow-300 disabled:opacity-70"
-                    >
-                      Add to Cart
-                    </button>
-                  </article>
+                  <FoodCard
+                    key={item.name}
+                    name={item.name}
+                    desc={item.desc}
+                    image="/pasta.jpg"
+                    imageFit="contain"
+                    actionButton={
+                      <button
+                        onClick={() => handleAddToCart(item.name)}
+                        disabled={!!loadingItem}
+                        className="flex w-full items-center justify-center rounded-lg bg-yellow-400 px-4 py-2 font-semibold text-zinc-900 transition hover:bg-yellow-300 disabled:opacity-70"
+                      >
+                        Add to Cart
+                      </button>
+                    }
+                  />
                 )
               ))}
             </div>
@@ -586,7 +590,7 @@ export default function Home() {
               Refresh your meal with chilled sodas, juices, and signature
               beverages.
             </p>
-            <div className="mt-6 flex flex-wrap gap-4">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[
                 { name: "Cola", desc: "Classic fizzy cola served ice cold." },
                 { name: "Fresh Lime", desc: "Zesty lime cooler with mint and soda." },
@@ -594,21 +598,24 @@ export default function Home() {
                 { name: "Mango Shake", desc: "Creamy mango shake made with fresh pulp." },
               ].map((item, index) => (
                 isFetchingData ? (
-                  <SkeletonCard key={index} className="min-w-[180px] flex-1 sm:min-w-[220px]" />
+                  <SkeletonCard key={index} />
                 ) : (
-                  <article key={item.name} className="min-w-[180px] flex-1 flex flex-col justify-between rounded-lg border border-zinc-200 p-4 sm:min-w-[220px]">
-                    <div>
-                      <h3 className="font-semibold">{item.name}</h3>
-                      <p className="mt-1 text-sm text-zinc-600">{item.desc}</p>
-                    </div>
-                    <button
-                      onClick={() => handleAddToCart(item.name)}
-                      disabled={!!loadingItem}
-                      className="mt-4 flex w-full items-center justify-center rounded-lg bg-yellow-400 px-4 py-2 font-semibold text-zinc-900 transition hover:bg-yellow-300 disabled:opacity-70"
-                    >
-                      Add to Cart
-                    </button>
-                  </article>
+                  <FoodCard
+                    key={item.name}
+                    name={item.name}
+                    desc={item.desc}
+                    image="/drinks.jpg"
+                    imageFit="contain"
+                    actionButton={
+                      <button
+                        onClick={() => handleAddToCart(item.name)}
+                        disabled={!!loadingItem}
+                        className="flex w-full items-center justify-center rounded-lg bg-yellow-400 px-4 py-2 font-semibold text-zinc-900 transition hover:bg-yellow-300 disabled:opacity-70"
+                      >
+                        Add to Cart
+                      </button>
+                    }
+                  />
                 )
               ))}
             </div>

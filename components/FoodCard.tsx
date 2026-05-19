@@ -11,18 +11,19 @@ interface FoodCardProps {
   desc: string;
   image: string;
   actionButton: React.ReactNode;
+  imageFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 }
 
-export function FoodCard({ name, desc, image, actionButton }: FoodCardProps) {
+export function FoodCard({ name, desc, image, actionButton, imageFit = 'cover' }: FoodCardProps) {
   return (
     <Card sx={{ maxWidth: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <CardMedia
-        component="img"
-        alt={name}
-        height="180"
-        image={image}
-        sx={{ height: 180, objectFit: 'cover' }}
-      />
+      <div style={{ width: '100%', overflow: 'hidden', background: '#f5f5f5' }}>
+        <img
+          src={image}
+          alt={name}
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
           {name}
