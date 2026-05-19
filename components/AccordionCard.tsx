@@ -55,7 +55,7 @@ export function AccordionCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Accordion type="single" collapsible defaultValue="hours">
+        <Accordion type="multiple" defaultValue={["hours"]}>
           {items.map((item) => (
             <AccordionItem key={item.value} value={item.value}>
               <AccordionTrigger className="text-left font-semibold text-zinc-900">{item.trigger}</AccordionTrigger>
