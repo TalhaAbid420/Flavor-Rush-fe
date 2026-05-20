@@ -11,8 +11,8 @@ const cartItems = [
 
 export default function CartPage() {
   return (
-    <main className="min-h-screen bg-zinc-100 p-4 sm:p-6 md:p-8">
-      <div className="mx-auto max-w-5xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
+    <main className="min-h-screen bg-transparent p-4 sm:p-6 md:p-8">
+      <div className="mx-auto max-w-5xl rounded-xl bg-white/85 backdrop-blur-sm p-4 shadow-sm sm:p-6">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">Your Cart</h1>
           <div className="flex gap-2">

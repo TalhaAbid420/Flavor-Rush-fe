@@ -30,6 +30,72 @@ function SkeletonCard({ className = "" }: { className?: string }) {
   );
 }
 
+function TypewriterTagline() {
+  const taglines = [
+    "Crispy. Juicy. Delicious.",
+    "Fresh Out the Oven.",
+    "The Ultimate Pizza Rush.",
+    "Taste the Happiness."
+  ];
+  const [text, setText] = useState("");
+  const [taglineIndex, setTaglineIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    const fullText = taglines[taglineIndex];
+
+    if (isDeleting) {
+      timer = setTimeout(() => {
+        setText(fullText.substring(0, text.length - 1));
+      }, 40);
+    } else {
+      timer = setTimeout(() => {
+        setText(fullText.substring(0, text.length + 1));
+      }, 80);
+    }
+
+    if (!isDeleting && text === fullText) {
+      timer = setTimeout(() => setIsDeleting(true), 1500);
+    } else if (isDeleting && text === "") {
+      setIsDeleting(false);
+      setTaglineIndex((prev) => (prev + 1) % taglines.length);
+    }
+
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, taglineIndex]);
+
+  return (
+    <span className="inline-block border-r-4 border-yellow-400 pr-1 select-none">
+      {text}
+    </span>
+  );
+}
+
+function CounterNumber({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const duration = 2000;
+    const increment = Math.ceil(target / (duration / 16));
+    
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [target]);
+
+  return <span>{count.toLocaleString()}{suffix}</span>;
+}
+
 export default function Home() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -225,9 +291,9 @@ export default function Home() {
         </div>
         {/* ── Mobile row 2: Place Order + Register + Cart ── */}
         <div className="mt-2 flex items-center gap-2 md:hidden">
-          <button type="button" onClick={() => setIsPlaceOrderModalOpen(true)} className="flex-1 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-500">Place Order</button>
-          <button type="button" onClick={() => setIsRegisterModalOpen(true)} className="flex-1 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-50">Register</button>
-          <Link href="/cart" aria-label="Cart" className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-yellow-300/40 transition hover:bg-yellow-300">
+          <button type="button" onClick={() => setIsPlaceOrderModalOpen(true)} className="flex-1 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-[0_1px_0_#991b1b80] transition-all hover:bg-red-500 active:translate-y-[4px] active:shadow-none animate-pulse">Place Order</button>
+          <button type="button" onClick={() => setIsRegisterModalOpen(true)} className="flex-1 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 shadow-[0_2px_0_#d4d4d8] transition-all hover:bg-zinc-50 active:translate-y-[4px] active:shadow-none">Register</button>
+          <Link href="/cart" aria-label="Cart" className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-yellow-300/40 transition hover:bg-yellow-300 animate-bounce">
             <span className="sr-only">Cart</span>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="text-zinc-900">
               <path d="M6.5 9.5H20L18.7 18.2C18.6 18.8 18.1 19.2 17.5 19.2H9.2C8.6 19.2 8.1 18.8 8 18.2L6.5 9.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
@@ -248,12 +314,88 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <nav aria-label="Main navigation">
               <ul className="flex items-center gap-x-6 text-sm font-semibold">
-                <li><a href="#pizzas" className="flex items-center gap-1 cursor-pointer transition hover:text-white"><Image src={pizzaIcon} alt="" width={20} height={20} />Pizzas</a></li>
-                <li><a href="#burgers" className="flex items-center gap-1 cursor-pointer transition hover:text-white"><Image src={burgerIcon} alt="" width={20} height={20} />Burgers</a></li>
-                <li><a href="#pasta" className="flex items-center gap-1 cursor-pointer transition hover:text-white"><Image src={pastaIcon} alt="" width={20} height={20} />Pasta</a></li>
-                <li><a href="#drinks" className="flex items-center gap-1 cursor-pointer transition hover:text-white"><Image src={drinksIcon} alt="" width={20} height={20} />Drinks</a></li>
+                {/* Pizzas */}
+                <li className="group relative py-2">
+                  <a href="#pizzas" className="flex items-center gap-1 cursor-pointer transition hover:text-white">
+                    <Image src={pizzaIcon} alt="" width={20} height={20} />Pizzas
+                  </a>
+                  <div className="absolute top-full left-0 z-50 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 w-52">
+                    <div className="rounded-xl bg-white/35 backdrop-blur-xl p-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.08)] border border-white/50 ring-1 ring-white/20">
+                      <ul className="space-y-0.5">
+                        {["Margherita Pizza", "Pepperoni Pizza", "BBQ Chicken Pizza", "Veggie Supreme", "Fajita Pizza", "Cheese Lover"].map((item) => (
+                          <li key={item}>
+                            <a href="#pizzas" className="block px-3 py-1.5 text-sm text-black hover:bg-yellow-400/40 rounded-lg transition font-bold">
+                              {item}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+
+                {/* Burgers */}
+                <li className="group relative py-2">
+                  <a href="#burgers" className="flex items-center gap-1 cursor-pointer transition hover:text-white">
+                    <Image src={burgerIcon} alt="" width={20} height={20} />Burgers
+                  </a>
+                  <div className="absolute top-full left-0 z-50 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 w-52">
+                    <div className="rounded-xl bg-white/35 backdrop-blur-xl p-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.08)] border border-white/50 ring-1 ring-white/20">
+                      <ul className="space-y-0.5">
+                        {["Classic Beef Burger", "Chicken Crispy Burger", "Double Patty Burger", "Mushroom Melt Burger", "Spicy Zinger Burger", "BBQ Smash Burger"].map((item) => (
+                          <li key={item}>
+                            <a href="#burgers" className="block px-3 py-1.5 text-sm text-black hover:bg-yellow-400/40 rounded-lg transition font-bold">
+                              {item}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+
+                {/* Pasta */}
+                <li className="group relative py-2">
+                  <a href="#pasta" className="flex items-center gap-1 cursor-pointer transition hover:text-white">
+                    <Image src={pastaIcon} alt="" width={20} height={20} />Pasta
+                  </a>
+                  <div className="absolute top-full left-0 z-50 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 w-52">
+                    <div className="rounded-xl bg-white/35 backdrop-blur-xl p-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.08)] border border-white/50 ring-1 ring-white/20">
+                      <ul className="space-y-0.5">
+                        {["Alfredo Pasta", "Arrabbiata Pasta", "Pesto Pasta", "Chicken Penne"].map((item) => (
+                          <li key={item}>
+                            <a href="#pasta" className="block px-3 py-1.5 text-sm text-black hover:bg-yellow-400/40 rounded-lg transition font-bold">
+                              {item}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+
+                {/* Drinks */}
+                <li className="group relative py-2">
+                  <a href="#drinks" className="flex items-center gap-1 cursor-pointer transition hover:text-white">
+                    <Image src={drinksIcon} alt="" width={20} height={20} />Drinks
+                  </a>
+                  <div className="absolute top-full left-0 z-50 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 w-52">
+                    <div className="rounded-xl bg-white/35 backdrop-blur-xl p-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.08)] border border-white/50 ring-1 ring-white/20">
+                      <ul className="space-y-0.5">
+                        {["Cola", "Fresh Lime", "Iced Tea", "Mango Shake"].map((item) => (
+                          <li key={item}>
+                            <a href="#drinks" className="block px-3 py-1.5 text-sm text-black hover:bg-yellow-400/40 rounded-lg transition font-bold">
+                              {item}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+
                 <li className="flex items-center">
-                  <Link href="/cart" aria-label="Cart" className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-300/40 transition hover:bg-yellow-300">
+                  <Link href="/cart" aria-label="Cart" className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-300/40 transition hover:bg-yellow-300 animate-bounce">
                     <span className="sr-only">Cart</span>
                     <span className="pointer-events-none absolute -top-4 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-md bg-zinc-900 px-2 py-1 text-xs font-medium text-white opacity-0 transition group-hover:opacity-100">See the Cart</span>
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="text-zinc-900">
@@ -267,8 +409,8 @@ export default function Home() {
                 </li>
               </ul>
             </nav>
-            <button type="button" onClick={() => setIsPlaceOrderModalOpen(true)} className="whitespace-nowrap rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500">Place Order</button>
-            <button type="button" onClick={() => setIsRegisterModalOpen(true)} className="whitespace-nowrap rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-50">Register</button>
+            <button type="button" onClick={() => setIsPlaceOrderModalOpen(true)} className="whitespace-nowrap rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-[0_2px_0_#991b1b80] transition-all hover:bg-red-500 active:translate-y-[4px] active:shadow-none cursor-pointer animate-pulse">Place Order</button>
+            <button type="button" onClick={() => setIsRegisterModalOpen(true)} className="whitespace-nowrap rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-[0_2px_0_#d4d4d8] transition-all hover:bg-zinc-50 active:translate-y-[4px] active:shadow-none cursor-pointer">Register</button>
             <button type="button" onClick={() => setIsProfileModalOpen(true)} className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden cursor-pointer rounded-full bg-zinc-800 ring-1 ring-white/20" aria-label="User profile">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="text-zinc-200">
                 <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" fill="currentColor" />
@@ -278,12 +420,12 @@ export default function Home() {
           </div>
         </div>
       </header>
-      <Sidebar variant="sidebar" side="left" className="bg-zinc-900 border-none pt-[116px] md:pt-[84px]">
+      <Sidebar variant="sidebar" side="left" className="!bg-transparent border-none pt-[116px] md:pt-[84px]" style={{ "--sidebar": "transparent" } as React.CSSProperties}>
         <SidebarContent>
           <SidebarGroup>
             <SidebarMenu className="gap-3 px-4 pt-4 sm:pt-6">
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 shadow-[0_2px_0_#ca8a0480] transition-all hover:bg-yellow-300 active:translate-y-[4px] active:shadow-none">
                   <a href="#pizzas" className="flex items-center w-full">
                     <Image src={pizzaIcon} alt="" width={24} height={24} className="mr-2 shrink-0" />
                     Pizzas
@@ -291,7 +433,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 shadow-[0_2px_0_#ca8a0480] transition-all hover:bg-yellow-300 active:translate-y-[4px] active:shadow-none">
                   <a href="#burgers" className="flex items-center w-full">
                     <Image src={burgerIcon} alt="" width={24} height={24} className="mr-2 shrink-0" />
                     Burgers
@@ -299,7 +441,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 shadow-[0_2px_0_#ca8a0480] transition-all hover:bg-yellow-300 active:translate-y-[4px] active:shadow-none">
                   <a href="#pasta" className="flex items-center w-full">
                     <Image src={pastaIcon} alt="" width={24} height={24} className="mr-2 shrink-0" />
                     Pasta
@@ -307,7 +449,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 shadow-[0_2px_0_#ca8a0480] transition-all hover:bg-yellow-300 active:translate-y-[4px] active:shadow-none">
                   <a href="#drinks" className="flex items-center w-full">
                     <Image src={drinksIcon} alt="" width={24} height={24} className="mr-2 shrink-0" />
                     Drinks
@@ -315,7 +457,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem className="mt-auto pt-4">
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-red-600 px-4 py-6 text-base font-semibold text-white transition hover:bg-red-500 hover:text-white">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-red-600 px-4 py-6 text-base font-semibold text-white shadow-[0_2px_0_#991b1b80] transition-all hover:bg-red-500 hover:text-white active:translate-y-[4px] active:shadow-none">
                   <Link href="/cart" className="flex items-center w-full">
                     <ShoppingCart className="w-6 h-6 mr-2 shrink-0" />
                     Cart
@@ -323,7 +465,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="w-full justify-start rounded-lg bg-zinc-800 px-4 py-6 text-base font-semibold text-white transition hover:bg-zinc-700 hover:text-white">
+                <SidebarMenuButton className="w-full justify-start rounded-lg bg-zinc-800 px-4 py-6 text-base font-semibold text-white shadow-[0_2px_0_#18181b80] transition-all hover:bg-zinc-700 hover:text-white active:translate-y-[4px] active:shadow-none">
                   <Link href="/tracking" className="flex items-center w-full">
                     <MapPin className="w-6 h-6 text-yellow-400 mr-2 shrink-0" />
                     Track your order
@@ -331,7 +473,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => setIsFutureBookingModalOpen(true)} className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 transition hover:bg-yellow-300">
+                <SidebarMenuButton onClick={() => setIsFutureBookingModalOpen(true)} className="w-full justify-start rounded-lg bg-yellow-400 px-4 py-6 text-base font-semibold text-zinc-900 shadow-[0_2px_0_#ca8a0480] transition-all hover:bg-yellow-300 active:translate-y-[4px] active:shadow-none">
                   <CalendarDays className="w-6 h-6 mr-2 shrink-0" />
                   Future Booking
                 </SidebarMenuButton>
@@ -340,7 +482,7 @@ export default function Home() {
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      <SidebarInset className="min-w-0 w-full pt-[116px] md:pt-[84px]">
+      <SidebarInset className="min-w-0 w-full pt-[116px] md:pt-[84px] !bg-transparent">
 
 
 
@@ -358,6 +500,11 @@ export default function Home() {
                 priority
                 className="object-cover"
               />
+              <div className="absolute inset-0 bg-black/45 flex flex-col items-center justify-center text-center p-4">
+                <h2 className="text-2xl sm:text-4xl md:text-6xl font-black text-white tracking-wider uppercase drop-shadow-lg">
+                  <TypewriterTagline />
+                </h2>
+              </div>
             </div>
 
             <button
@@ -395,7 +542,32 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="pizzas" className="rounded-xl bg-white p-4 shadow-sm sm:p-6">
+          {/* Number Counter Track Record (Moved under Carousel) */}
+          <section className="mx-0 my-6 p-6 rounded-xl bg-white/85 backdrop-blur-xl border border-white/50 shadow-xl transition-all duration-300">
+            <h3 className="text-xl font-bold text-center text-zinc-900 mb-6 uppercase tracking-wider">Our Track Record</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+              <div>
+                <div className="text-4xl md:text-5xl font-black text-red-600 mb-2">
+                  <CounterNumber target={10000} suffix="+" />
+                </div>
+                <p className="text-sm font-semibold text-zinc-700">Happy Customers</p>
+              </div>
+              <div>
+                <div className="text-4xl md:text-5xl font-black text-red-600 mb-2">
+                  <CounterNumber target={50} suffix="+" />
+                </div>
+                <p className="text-sm font-semibold text-zinc-700">Outlet Locations</p>
+              </div>
+              <div>
+                <div className="text-4xl md:text-5xl font-black text-red-600 mb-2">
+                  <CounterNumber target={150} suffix="+" />
+                </div>
+                <p className="text-sm font-semibold text-zinc-700">Food Varieties</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="pizzas" className="rounded-xl bg-white/85 backdrop-blur-sm bg-yellow-100 p-4 shadow-sm sm:p-6">
             <h2 className="text-2xl font-bold text-zinc-900 sm:text-3xl">Pizzas</h2>
             <p className="mt-2 text-zinc-600">
               Explore our classic and specialty pizzas with rich toppings and
@@ -403,12 +575,12 @@ export default function Home() {
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[
-                { name: "Margherita Pizza", desc: "Fresh basil, mozzarella, and tomato sauce." },
-                { name: "Pepperoni Pizza", desc: "Loaded with spicy pepperoni and extra cheese." },
-                { name: "BBQ Chicken Pizza", desc: "Smoky BBQ sauce with grilled chicken chunks." },
-                { name: "Veggie Supreme", desc: "Capsicum, olives, onions, and sweet corn." },
-                { name: "Fajita Pizza", desc: "Spicy fajita chicken with jalapenos and onions." },
-                { name: "Cheese Lover", desc: "A rich blend of mozzarella and cheddar cheese." },
+                { name: "Margherita Pizza", desc: "Fresh basil, mozzarella, and tomato sauce.", price: "Rs. 950" },
+                { name: "Pepperoni Pizza", desc: "Loaded with spicy pepperoni and extra cheese.", price: "Rs. 1200" },
+                { name: "BBQ Chicken Pizza", desc: "Smoky BBQ sauce with grilled chicken chunks.", price: "Rs. 1350" },
+                { name: "Veggie Supreme", desc: "Capsicum, olives, onions, and sweet corn.", price: "Rs. 1100" },
+                { name: "Fajita Pizza", desc: "Spicy fajita chicken with jalapenos and onions.", price: "Rs. 1300" },
+                { name: "Cheese Lover", desc: "A rich blend of mozzarella and cheddar cheese.", price: "Rs. 1400" },
               ].map((item, index) => (
                 isFetchingData ? (
                   <SkeletonCard key={index} />
@@ -417,6 +589,7 @@ export default function Home() {
                     key={item.name}
                     name={item.name}
                     desc={item.desc}
+                    price={item.price}
                     image="/mock-pizza.jpg"
                     actionButton={
                       <button
@@ -435,7 +608,7 @@ export default function Home() {
 
           <hr className="my-6 border-zinc-300" />
 
-          <section id="burgers" className="rounded-xl bg-white p-4 shadow-sm sm:p-6">
+          <section id="burgers" className="rounded-xl bg-white/85 backdrop-blur-sm bg-yellow-100 bg-yellow-100 p-4 shadow-sm sm:p-6">
             <h2 className="text-2xl font-bold text-zinc-900 sm:text-3xl">Burgers</h2>
             <p className="mt-2 text-zinc-600">
               Find juicy burgers layered with premium patties, sauces, and
@@ -443,12 +616,12 @@ export default function Home() {
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[
-                { name: "Classic Beef Burger", desc: "Grilled beef patty with lettuce and house sauce." },
-                { name: "Chicken Crispy Burger", desc: "Crispy chicken fillet with spicy mayo." },
-                { name: "Double Patty Burger", desc: "Two patties stacked with melting cheese." },
-                { name: "Mushroom Melt Burger", desc: "Sauteed mushrooms with creamy cheese sauce." },
-                { name: "Spicy Zinger Burger", desc: "Crunchy zinger fillet with hot chili spread." },
-                { name: "BBQ Smash Burger", desc: "Smashed patty glazed in smoky BBQ sauce." },
+                { name: "Classic Beef Burger", desc: "Grilled beef patty with lettuce and house sauce.", price: "Rs. 650" },
+                { name: "Chicken Crispy Burger", desc: "Crispy chicken fillet with spicy mayo.", price: "Rs. 550" },
+                { name: "Double Patty Burger", desc: "Two patties stacked with melting cheese.", price: "Rs. 850" },
+                { name: "Mushroom Melt Burger", desc: "Sauteed mushrooms with creamy cheese sauce.", price: "Rs. 750" },
+                { name: "Spicy Zinger Burger", desc: "Crunchy zinger fillet with hot chili spread.", price: "Rs. 600" },
+                { name: "BBQ Smash Burger", desc: "Smashed patty glazed in smoky BBQ sauce.", price: "Rs. 700" },
               ].map((item, index) => (
                 isFetchingData ? (
                   <SkeletonCard key={index} />
@@ -457,6 +630,7 @@ export default function Home() {
                     key={item.name}
                     name={item.name}
                     desc={item.desc}
+                    price={item.price}
                     image="/burger.jpg"
                     imageFit="contain"
                     actionButton={
@@ -476,7 +650,7 @@ export default function Home() {
 
           <hr className="my-6 border-zinc-300" />
 
-          <section id="pasta" className="rounded-xl bg-white p-4 shadow-sm sm:p-6">
+          <section id="pasta" className="rounded-xl bg-white/85 backdrop-blur-sm bg-yellow-100 p-4 shadow-sm sm:p-6">
             <h2 className="text-2xl font-bold text-zinc-900 sm:text-3xl">Pasta</h2>
             <p className="mt-2 text-zinc-600">
               Choose from creamy, spicy, and tomato-based pasta dishes made to
@@ -484,10 +658,10 @@ export default function Home() {
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[
-                { name: "Alfredo Pasta", desc: "Creamy white sauce pasta with parmesan." },
-                { name: "Arrabbiata Pasta", desc: "Spicy tomato sauce with garlic and herbs." },
-                { name: "Pesto Pasta", desc: "Fresh basil pesto with roasted vegetables." },
-                { name: "Chicken Penne", desc: "Penne tossed with grilled chicken in pink sauce." },
+                { name: "Alfredo Pasta", desc: "Creamy white sauce pasta with parmesan.", price: "Rs. 850" },
+                { name: "Arrabbiata Pasta", desc: "Spicy tomato sauce with garlic and herbs.", price: "Rs. 800" },
+                { name: "Pesto Pasta", desc: "Fresh basil pesto with roasted vegetables.", price: "Rs. 900" },
+                { name: "Chicken Penne", desc: "Penne tossed with grilled chicken in pink sauce.", price: "Rs. 950" },
               ].map((item, index) => (
                 isFetchingData ? (
                   <SkeletonCard key={index} />
@@ -496,6 +670,7 @@ export default function Home() {
                     key={item.name}
                     name={item.name}
                     desc={item.desc}
+                    price={item.price}
                     image="/pasta.jpg"
                     imageFit="contain"
                     actionButton={
@@ -515,7 +690,7 @@ export default function Home() {
 
           <hr className="my-6 border-zinc-300" />
 
-          <section id="drinks" className="rounded-xl bg-white p-4 shadow-sm sm:p-6">
+          <section id="drinks" className="rounded-xl bg-white/85 backdrop-blur-sm bg-yellow-100 p-4 shadow-sm sm:p-6">
             <h2 className="text-2xl font-bold text-zinc-900 sm:text-3xl">Drinks</h2>
             <p className="mt-2 text-zinc-600">
               Refresh your meal with chilled sodas, juices, and signature
@@ -523,10 +698,10 @@ export default function Home() {
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[
-                { name: "Cola", desc: "Classic fizzy cola served ice cold." },
-                { name: "Fresh Lime", desc: "Zesty lime cooler with mint and soda." },
-                { name: "Iced Tea", desc: "Chilled tea with lemon and a hint of sweetness." },
-                { name: "Mango Shake", desc: "Creamy mango shake made with fresh pulp." },
+                { name: "Cola", desc: "Classic fizzy cola served ice cold.", price: "Rs. 150" },
+                { name: "Fresh Lime", desc: "Zesty lime cooler with mint and soda.", price: "Rs. 200" },
+                { name: "Iced Tea", desc: "Chilled tea with lemon and a hint of sweetness.", price: "Rs. 250" },
+                { name: "Mango Shake", desc: "Creamy mango shake made with fresh pulp.", price: "Rs. 350" },
               ].map((item, index) => (
                 isFetchingData ? (
                   <SkeletonCard key={index} />
@@ -535,6 +710,7 @@ export default function Home() {
                     key={item.name}
                     name={item.name}
                     desc={item.desc}
+                    price={item.price}
                     image="/drinks.jpg"
                     imageFit="contain"
                     actionButton={
@@ -553,26 +729,77 @@ export default function Home() {
           </section>
         </main>
 
-        <section
-          className="bg-zinc-100 px-4 py-8 sm:px-6 md:px-8 transition-all duration-300"
-
-        >
+        <section className="px-4 py-8 sm:px-6 md:px-8 transition-all duration-300">
           <AccordionCard />
         </section>
 
-        <footer className="footer footer-horizontal footer-center bg-zinc-900 text-white p-10 transition-all duration-300">
+        {/* Infinite Marquee of Partner Brands */}
+        <section className="w-full overflow-hidden bg-white/40 backdrop-blur-md py-6 border-y border-white/30 mb-8">
+          <div className="animate-marquee flex items-center gap-12 whitespace-nowrap">
+            {/* First Set of Brands */}
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Pepsi</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Coca-Cola</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Pizza Hut</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">McDonald's</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">KFC</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Subway</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Burger King</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Foodpanda</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            
+            {/* Duplicated Second Set for Seamless Loop */}
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Pepsi</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Coca-Cola</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Pizza Hut</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">McDonald's</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">KFC</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Subway</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Burger King</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">Foodpanda</span>
+            <span className="text-lg font-black text-zinc-900 uppercase tracking-widest">•</span>
+          </div>
+        </section>
+
+        <footer
+          className="footer footer-horizontal footer-center text-zinc-900 p-10 transition-all duration-300"
+          style={{
+            backgroundColor: '#ffeab0',
+            backgroundImage: [
+              'radial-gradient(ellipse at 0% 0%, rgba(255, 180, 0, 0.9) 0%, transparent 45%)',
+              'radial-gradient(ellipse at 100% 0%, rgba(255, 90, 0, 0.85) 0%, transparent 45%)',
+              'radial-gradient(ellipse at 50% 50%, rgba(255, 140, 0, 0.6) 0%, transparent 55%)',
+              'radial-gradient(ellipse at 0% 100%, rgba(255, 210, 0, 0.8) 0%, transparent 45%)',
+              'radial-gradient(ellipse at 100% 100%, rgba(220, 60, 0, 0.75) 0%, transparent 45%)',
+              'radial-gradient(ellipse at 60% 25%, rgba(255, 160, 30, 0.5) 0%, transparent 40%)',
+            ].join(', '),
+          }}
+        >
           <aside>
             <Image src={flavorRushLogo} alt="Flavor Rush logo" width={60} height={60} />
             <p className="font-bold text-lg">
               Flavor Rush
               <br />
-              <span className="text-sm font-normal text-zinc-300">Mock Address: 123 Flavor Street, Foodie Block, Karachi, Pakistan - 75000</span>
+              <span className="text-sm font-normal text-zinc-700">Mock Address: 123 Flavor Street, Foodie Block, Karachi, Pakistan - 75000</span>
             </p>
-            <p className="mt-4 text-zinc-400">Copyright © {new Date().getFullYear()} - All right reserved</p>
+            <p className="mt-4 text-zinc-700">Copyright © {new Date().getFullYear()} - All right reserved</p>
           </aside>
           <nav className="mt-8">
             <div className="grid grid-flow-col gap-4">
-              <a className="transition hover:text-yellow-400 cursor-pointer">
+              <a className="transition hover:text-orange-600 cursor-pointer text-zinc-800">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -583,7 +810,7 @@ export default function Home() {
                     d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
                 </svg>
               </a>
-              <a className="transition hover:text-yellow-400 cursor-pointer">
+              <a className="transition hover:text-orange-600 cursor-pointer text-zinc-800">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -594,7 +821,7 @@ export default function Home() {
                     d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
                 </svg>
               </a>
-              <a className="transition hover:text-yellow-400 cursor-pointer">
+              <a className="transition hover:text-orange-600 cursor-pointer text-zinc-800">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -642,7 +869,7 @@ export default function Home() {
             }} className="space-y-4">
               {/* Category */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Category</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Category</label>
                 <div className="mt-1 flex flex-wrap gap-4">
                   {["Pizza", "Pasta", "Burger", "Drinks"].map((cat) => (
                     <label key={cat} className="flex items-center gap-1 cursor-pointer">
@@ -659,13 +886,13 @@ export default function Home() {
 
               {/* Name */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Name</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Name</label>
                 <input required type="text" className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400" value={orderName} onChange={(e) => setOrderName(e.target.value)} />
               </div>
 
               {/* Flavors */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Flavor</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Flavor</label>
                 <div className="mt-1 grid grid-cols-2 gap-2">
                   {(orderCategory === "Pizza" ? ["Margherita", "Pepperoni", "BBQ Chicken", "Veggie Supreme", "Fajita", "Cheese Lover"] :
                     orderCategory === "Pasta" ? ["Alfredo", "Arrabbiata", "Pesto", "Chicken Penne"] :
@@ -682,7 +909,7 @@ export default function Home() {
               {/* Sizes */}
               {orderCategory === "Pizza" && (
                 <div>
-                  <label className="block text-sm font-semibold text-zinc-900">Size</label>
+                  <label className="block text-sm font-semibold text-zinc-900 font-bold">Size</label>
                   <input type="range" min="1" max="4" step="1" className="mt-2 w-full accent-yellow-400" value={orderPizzaSize} onChange={(e) => setOrderPizzaSize(parseInt(e.target.value))} />
                   <div className="flex justify-between text-xs text-zinc-500 font-medium">
                     <span>Small</span>
@@ -694,7 +921,7 @@ export default function Home() {
               )}
               {orderCategory === "Drinks" && (
                 <div>
-                  <label className="block text-sm font-semibold text-zinc-900">Size</label>
+                  <label className="block text-sm font-semibold text-zinc-900 font-bold">Size</label>
                   <input type="range" min="1" max="3" step="1" className="mt-2 w-full accent-yellow-400" value={orderDrinkSize} onChange={(e) => setOrderDrinkSize(parseInt(e.target.value))} />
                   <div className="flex justify-between text-xs text-zinc-500 font-medium">
                     <span>Regular</span>
@@ -707,7 +934,7 @@ export default function Home() {
               {/* Toppings */}
               {(orderCategory === "Pizza" || orderCategory === "Pasta") && (
                 <div>
-                  <label className="block text-sm font-semibold text-zinc-900">Toppings</label>
+                  <label className="block text-sm font-semibold text-zinc-900 font-bold">Toppings</label>
                   <div className="mt-1 flex flex-wrap gap-3">
                     {["Extra Cheese", "Olives", "Mushrooms", "Jalapenos", "Bell Peppers"].map((topping) => (
                       <label key={topping} className="flex items-center gap-1 cursor-pointer">
@@ -724,7 +951,7 @@ export default function Home() {
 
               {/* Quantity */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Quantity</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Quantity</label>
                 <input required type="number" min="1" className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400" value={orderQuantity} onChange={(e) => setOrderQuantity(parseInt(e.target.value))} />
               </div>
 
@@ -735,7 +962,7 @@ export default function Home() {
                     <input type="checkbox" className="peer sr-only" checked={orderFastDelivery} onChange={(e) => setOrderFastDelivery(e.target.checked)} />
                     <div className="h-6 w-11 rounded-full bg-zinc-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-yellow-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-yellow-400"></div>
                   </div>
-                  <span className="text-sm font-semibold text-zinc-900">Fast Delivery</span>
+                  <span className="text-sm font-semibold text-zinc-900 font-bold">Fast Delivery</span>
                 </label>
                 {orderFastDelivery && (
                   <p className="mt-1 text-xs text-red-600 font-medium">It will add 50 extra Rupees to the bill.</p>
@@ -744,13 +971,13 @@ export default function Home() {
 
               {/* Suggestions */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Any Suggestions</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Any Suggestions</label>
                 <textarea className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400" rows={3} value={orderSuggestions} onChange={(e) => setOrderSuggestions(e.target.value)}></textarea>
               </div>
 
               <div className="mt-6 flex justify-end gap-2">
                 <button type="button" onClick={() => setIsPlaceOrderModalOpen(false)} className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50">Cancel</button>
-                <button type="submit" className="rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-yellow-300">Submit Order</button>
+                <button type="submit" className="rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-zinc-900 font-bold transition hover:bg-yellow-300">Submit Order</button>
               </div>
             </form>
           </div>
@@ -763,7 +990,7 @@ export default function Home() {
           onClick={() => setIsFutureBookingModalOpen(false)}
         >
           <div
-            className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-6 shadow-xl"
+            className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white/85 backdrop-blur-xl backdrop-saturate-150 border border-white/50 p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] ring-1 ring-inset ring-white/40"
             role="dialog"
             aria-modal="true"
             aria-labelledby="future-booking-modal-title"
@@ -796,7 +1023,7 @@ export default function Home() {
 
               {/* Category */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Category</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Category</label>
                 <div className="mt-1 flex flex-wrap gap-4">
                   {["Pizza", "Pasta", "Burger", "Drinks"].map((cat) => (
                     <label key={cat} className="flex items-center gap-1 cursor-pointer">
@@ -813,13 +1040,13 @@ export default function Home() {
 
               {/* Name */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Name</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Name</label>
                 <input required type="text" className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400" value={orderName} onChange={(e) => setOrderName(e.target.value)} />
               </div>
 
               {/* Flavors */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Flavor</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Flavor</label>
                 <div className="mt-1 grid grid-cols-2 gap-2">
                   {(orderCategory === "Pizza" ? ["Margherita", "Pepperoni", "BBQ Chicken", "Veggie Supreme", "Fajita", "Cheese Lover"] :
                     orderCategory === "Pasta" ? ["Alfredo", "Arrabbiata", "Pesto", "Chicken Penne"] :
@@ -836,7 +1063,7 @@ export default function Home() {
               {/* Sizes */}
               {orderCategory === "Pizza" && (
                 <div>
-                  <label className="block text-sm font-semibold text-zinc-900">Size</label>
+                  <label className="block text-sm font-semibold text-zinc-900 font-bold">Size</label>
                   <input type="range" min="1" max="4" step="1" className="mt-2 w-full accent-orange-400" value={orderPizzaSize} onChange={(e) => setOrderPizzaSize(parseInt(e.target.value))} />
                   <div className="flex justify-between text-xs text-zinc-500 font-medium">
                     <span>Small</span>
@@ -848,7 +1075,7 @@ export default function Home() {
               )}
               {orderCategory === "Drinks" && (
                 <div>
-                  <label className="block text-sm font-semibold text-zinc-900">Size</label>
+                  <label className="block text-sm font-semibold text-zinc-900 font-bold">Size</label>
                   <input type="range" min="1" max="3" step="1" className="mt-2 w-full accent-orange-400" value={orderDrinkSize} onChange={(e) => setOrderDrinkSize(parseInt(e.target.value))} />
                   <div className="flex justify-between text-xs text-zinc-500 font-medium">
                     <span>Regular</span>
@@ -861,7 +1088,7 @@ export default function Home() {
               {/* Toppings */}
               {(orderCategory === "Pizza" || orderCategory === "Pasta") && (
                 <div>
-                  <label className="block text-sm font-semibold text-zinc-900">Toppings</label>
+                  <label className="block text-sm font-semibold text-zinc-900 font-bold">Toppings</label>
                   <div className="mt-1 flex flex-wrap gap-3">
                     {["Extra Cheese", "Olives", "Mushrooms", "Jalapenos", "Bell Peppers"].map((topping) => (
                       <label key={topping} className="flex items-center gap-1 cursor-pointer">
@@ -878,7 +1105,7 @@ export default function Home() {
 
               {/* Quantity */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Quantity</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Quantity</label>
                 <input required type="number" min="1" className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400" value={orderQuantity} onChange={(e) => setOrderQuantity(parseInt(e.target.value))} />
               </div>
 
@@ -889,7 +1116,7 @@ export default function Home() {
                     <input type="checkbox" className="peer sr-only" checked={orderFastDelivery} onChange={(e) => setOrderFastDelivery(e.target.checked)} />
                     <div className="h-6 w-11 rounded-full bg-zinc-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-orange-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-400"></div>
                   </div>
-                  <span className="text-sm font-semibold text-zinc-900">Fast Delivery</span>
+                  <span className="text-sm font-semibold text-zinc-900 font-bold">Fast Delivery</span>
                 </label>
                 {orderFastDelivery && (
                   <p className="mt-1 text-xs text-red-600 font-medium">It will add 50 extra Rupees to the bill.</p>
@@ -898,13 +1125,13 @@ export default function Home() {
 
               {/* Suggestions */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Any Suggestions</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Any Suggestions</label>
                 <textarea className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-400" rows={3} value={orderSuggestions} onChange={(e) => setOrderSuggestions(e.target.value)}></textarea>
               </div>
 
               <div className="mt-6 flex justify-end gap-2">
                 <button type="button" onClick={() => setIsFutureBookingModalOpen(false)} className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50">Cancel</button>
-                <button type="submit" className="rounded-lg bg-orange-400 px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-orange-300">Book Order</button>
+                <button type="submit" className="rounded-lg bg-orange-400 px-4 py-2 text-sm font-semibold text-zinc-900 font-bold transition hover:bg-orange-300">Book Order</button>
               </div>
             </form>
           </div>
@@ -917,7 +1144,7 @@ export default function Home() {
           onClick={() => setIsProfileModalOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl"
+            className="w-full max-w-sm rounded-2xl bg-white/85 backdrop-blur-xl backdrop-saturate-150 border border-white/50 p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] ring-1 ring-inset ring-white/40"
             role="dialog"
             aria-modal="true"
             aria-labelledby="profile-modal-title"
@@ -937,24 +1164,24 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="space-y-2 text-sm text-zinc-700">
+            <div className="space-y-2 text-sm text-zinc-900 font-medium">
               <p>
-                <span className="font-semibold text-zinc-900">Name:</span> Alex Khan
+                <span className="font-bold text-black drop-shadow-sm">Name:</span> Alex Khan
               </p>
               <p>
-                <span className="font-semibold text-zinc-900">Email:</span>{" "}
+                <span className="font-bold text-black drop-shadow-sm">Email:</span>{" "}
                 alex.khan@example.com
               </p>
               <p>
-                <span className="font-semibold text-zinc-900">Phone:</span>{" "}
+                <span className="font-bold text-black drop-shadow-sm">Phone:</span>{" "}
                 +92 300 1234567
               </p>
               <p>
-                <span className="font-semibold text-zinc-900">Address:</span>{" "}
+                <span className="font-bold text-black drop-shadow-sm">Address:</span>{" "}
                 123 Flavor Street, Karachi
               </p>
               <p>
-                <span className="font-semibold text-zinc-900">Member Since:</span>{" "}
+                <span className="font-bold text-black drop-shadow-sm">Member Since:</span>{" "}
                 Jan 2025
               </p>
             </div>
@@ -981,7 +1208,7 @@ export default function Home() {
           onClick={() => setIsRegisterModalOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl"
+            className="w-full max-w-sm rounded-2xl bg-white/85 backdrop-blur-xl backdrop-saturate-150 border border-white/50 p-6 shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] ring-1 ring-inset ring-white/40"
             role="dialog"
             aria-modal="true"
             aria-labelledby="register-modal-title"
@@ -1014,44 +1241,44 @@ export default function Home() {
               className="space-y-4"
             >
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Name</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Name</label>
                 <input
                   required
                   type="text"
-                  className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+                  className="mt-1 w-full rounded-lg border border-white/50 bg-white/40 px-3 py-2 text-sm text-zinc-900 font-bold placeholder-zinc-500 shadow-inner backdrop-blur-md transition-colors focus:border-yellow-400 focus:bg-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
                   value={registerName}
                   onChange={(e) => setRegisterName(e.target.value)}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Email</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Email</label>
                 <input
                   required
                   type="email"
-                  className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+                  className="mt-1 w-full rounded-lg border border-white/50 bg-white/40 px-3 py-2 text-sm text-zinc-900 font-bold placeholder-zinc-500 shadow-inner backdrop-blur-md transition-colors focus:border-yellow-400 focus:bg-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
                   value={registerEmail}
                   onChange={(e) => setRegisterEmail(e.target.value)}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Password</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Password</label>
                 <input
                   required
                   type="password"
-                  className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+                  className="mt-1 w-full rounded-lg border border-white/50 bg-white/40 px-3 py-2 text-sm text-zinc-900 font-bold placeholder-zinc-500 shadow-inner backdrop-blur-md transition-colors focus:border-yellow-400 focus:bg-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
                   value={registerPassword}
                   onChange={(e) => setRegisterPassword(e.target.value)}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-zinc-900">Profile Picture</label>
+                <label className="block text-sm font-semibold text-zinc-900 font-bold">Profile Picture</label>
                 <input
                   type="file"
                   accept="image/*"
-                  className="mt-1 block w-full text-sm text-zinc-500 file:mr-4 file:rounded-md file:border-0 file:bg-yellow-400 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-zinc-900 hover:file:bg-yellow-300"
+                  className="mt-1 block w-full text-sm text-zinc-700 file:mr-4 file:rounded-lg file:border file:border-white/50 file:bg-yellow-400/80 file:backdrop-blur-md file:px-4 file:py-2 file:text-sm file:font-semibold file:text-zinc-900 font-bold file:shadow-sm file:transition-colors hover:file:bg-yellow-400"
                   onChange={(e) => {
                     if (e.target.files && e.target.files.length > 0) {
                       setRegisterFile(e.target.files[0]);
@@ -1064,13 +1291,13 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setIsRegisterModalOpen(false)}
-                  className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50"
+                  className="rounded-lg border border-white/50 bg-white/40 px-4 py-2 text-sm font-semibold text-zinc-800 shadow-sm backdrop-blur-md transition-colors hover:bg-white/60"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
+                  className="rounded-lg border border-transparent bg-zinc-900/90 px-4 py-2 text-sm font-semibold text-white shadow-sm backdrop-blur-md transition-colors hover:bg-zinc-900"
                 >
                   Create Account
                 </button>

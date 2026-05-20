@@ -47,7 +47,7 @@ const items = [
 
 export function AccordionCard() {
   return (
-    <Card className="w-full max-w-3xl mx-auto shadow-sm">
+    <Card className="w-full bg-yellow-100 max-w-3xl mx-auto shadow-sm">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-zinc-900 sm:text-3xl">Frequently Asked Questions</CardTitle>
         <CardDescription className="text-zinc-600">

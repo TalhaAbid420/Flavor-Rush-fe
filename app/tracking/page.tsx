@@ -20,8 +20,8 @@ export default function TrackingPage() {
   const progressPercentage = (currentStatusIndex / (statuses.length - 1)) * 100;
 
   return (
-    <main className="min-h-screen bg-zinc-100 p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center">
-      <div className="w-full max-w-3xl rounded-xl bg-white p-6 shadow-sm sm:p-10">
+    <main className="min-h-screen bg-transparent p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center">
+      <div className="w-full max-w-3xl rounded-xl bg-white/85 backdrop-blur-sm p-6 shadow-sm sm:p-10">
         <div className="mb-10 flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">Order Tracking</h1>
