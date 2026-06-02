@@ -28,10 +28,10 @@ export default function TrackingPage() {
             <p className="mt-1 text-sm text-zinc-500">Order ID: <span className="font-semibold text-zinc-700">#FR-9824</span></p>
           </div>
           <Link
-            href="/"
+            href="/menu"
             className="rounded-lg border-2 border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50"
           >
-            Back to Home
+            Back to Menu
           </Link>
         </div>
 
