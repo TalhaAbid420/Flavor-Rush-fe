@@ -312,7 +312,7 @@ export default function Home() {
             <h1 className="text-2xl font-bold tracking-wide">Flavor Rush</h1>
           </div>
           <div className="flex items-center gap-4">
-            <nav aria-label="Main navigation">
+            <nav aria-label="Main navigation" className="hidden lg:block">
               <ul className="flex items-center gap-x-6 text-sm font-semibold">
                 {/* Pizzas */}
                 <li className="group relative py-2">
